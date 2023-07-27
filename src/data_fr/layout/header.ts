@@ -1,6 +1,5 @@
 /*** exports ***/
 
-export const logo: string = "";
 export const options: IOption[] = [
   {
     name: "Créer votre projet",
@@ -11,8 +10,6 @@ export const options: IOption[] = [
     slug: "",
   },
 ];
-
-export const profileIcon: string = "";
 
 /*** Interfaces ***/
 

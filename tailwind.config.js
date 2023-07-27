@@ -13,12 +13,15 @@ module.exports = {
         secondary: "#343434",
       },
       fontFamily: {
-        primary: "var(--font-primary)",
-        secondary: "var(--font-secondary)",
-        tertiary: "var(--font-tertiary)",
-        quaternary: "var(--font-quaternary)",
+        primary: "OpenSans-Regular",
+        secondary: "OpenSans-ExtraBold",
+        tertiary: "PublicSans-Regular",
+        quaternary: "Radley-Regular",
       },
     },
   },
-  plugins: [],
+  daisyui: {
+    themes: ["light"],
+  },
+  plugins: [require("daisyui")],
 };
