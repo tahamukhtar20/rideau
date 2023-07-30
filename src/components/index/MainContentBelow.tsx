@@ -2,6 +2,7 @@ import { mainContentBelow } from "@/data_fr/index/mainContent";
 import Image from "next/image";
 import BottomImage1 from "@/assets/images/MainComponentBelowImage1.webp";
 import BottomImage2 from "@/assets/images/MainComponentBelowImage2.webp";
+import React from "react";
 
 export const MainContentBelow: React.FC = () => {
   return (

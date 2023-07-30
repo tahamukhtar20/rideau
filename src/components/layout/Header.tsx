@@ -1,5 +1,7 @@
 import { options } from "@/data_fr/layout/header";
 import { HamburgerIcon, Logo, ProfileIcon } from "@/assets/SVG";
+import Link from "next/link";
+import React from "react";
 
 export const Header: React.FC = () => {
   const hamburgerMenu = (
@@ -16,9 +18,9 @@ export const Header: React.FC = () => {
   const drawer = (
     <>
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-side">
+      <div className="drawer-side ">
         <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-        <ul className="menu p-4 w-80 h-full bg-secondary">
+        <ul className="menu p-4 w-80 h-full bg-secondary z-50">
           {options.map((option, index) => (
             <li key={index}>
               <a
@@ -48,9 +50,9 @@ export const Header: React.FC = () => {
             {option.name}
           </a>
         ))}
-        <div>
+        <Link href={"/signup"}>
           <ProfileIcon />
-        </div>
+        </Link>
       </nav>
       <nav className="items-center md:hidden flex justify-between w-full h-full flex-row">
         <div className="flex w-24 overflow-clip">

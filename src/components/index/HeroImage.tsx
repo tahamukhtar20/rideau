@@ -1,5 +1,6 @@
 import Image from "next/image";
 import HeroImageWebP from "@/assets/images/HeroComponentImage.webp";
+import React from "react";
 
 export const HeroImage: React.FC = () => {
   return (

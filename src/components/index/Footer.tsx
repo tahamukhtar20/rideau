@@ -1,6 +1,7 @@
 import Image from "next/image";
 import FooterImage from "@/assets/images/MainFooterImage.webp";
 import { footerContent } from "@/data_fr/index/footerContent";
+import React from "react";
 
 export const Footer: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ export const Footer: React.FC = () => {
         <Image
           src={FooterImage}
           alt={"FooterImage"}
-          style={{ objectFit: "cover", width: "100%" , height: "100%" }}
+          style={{ objectFit: "cover", width: "100%", height: "100%" }}
         />
       </div>
       <footer className="sticky bg-primary-dark min-h-[12rem] font-quaternary w-full text-secondary flex flex-col lg:flex-row">

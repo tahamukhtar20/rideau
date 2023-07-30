@@ -1,4 +1,5 @@
 import { mainContentAbove } from "@/data_fr/index/mainContent";
+import React from "react";
 
 export const MainContentAbove: React.FC = () => {
   return (
