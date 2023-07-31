@@ -1,4 +1,4 @@
-import { mainContentBelow } from "@/data_fr/index/mainContent";
+import { mainContentBelow } from "@/data/home/mainContent";
 import Image from "next/image";
 import BottomImage1 from "@/assets/images/MainComponentBelowImage1.webp";
 import BottomImage2 from "@/assets/images/MainComponentBelowImage2.webp";

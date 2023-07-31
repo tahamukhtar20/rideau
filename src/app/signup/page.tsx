@@ -1,5 +1,6 @@
-import { signup } from "@/data_fr/signup/signup";
-import { trPhone } from "@/components/signup/PhoneInput";
+import { signup } from "@/data/signup/signup";
+import { trPhone } from "@/components/signup/client/PhoneInput";
+import React from "react";
 
 export default function Signup() {
   return (

@@ -1,5 +1,5 @@
-import { options } from "@/data_fr/layout/header";
-import { HamburgerIcon, Logo, ProfileIcon } from "@/assets/SVG";
+import { options } from "@/data/home/header";
+import { HamburgerIcon, Logo, ProfileIcon } from "@/utils/SVG";
 import Link from "next/link";
 import React from "react";
 

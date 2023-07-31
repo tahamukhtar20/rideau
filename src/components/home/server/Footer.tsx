@@ -1,6 +1,6 @@
 import Image from "next/image";
 import FooterImage from "@/assets/images/MainFooterImage.webp";
-import { footerContent } from "@/data_fr/index/footerContent";
+import { footerContent } from "@/data/home/footerContent";
 import React from "react";
 
 export const Footer: React.FC = () => {

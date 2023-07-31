@@ -1,4 +1,4 @@
-import { signup } from "@/data_fr/signup/signup";
+import { signup } from "@/data/signup/signup";
 import React from "react";
 
 export async function trPhone({

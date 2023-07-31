@@ -1,6 +1,6 @@
 import Image from "next/image";
-import LogoSVG from "./SVGFiles/Logo.svg";
-import Hamburger from "./SVGFiles/Hamburger.svg";
+import LogoSVG from "@/assets/svg/Logo.svg";
+import Hamburger from "@/assets/svg/Hamburger.svg";
 
 export const HamburgerIcon = () => (
   <Image src={Hamburger} alt="hamburger" style={{ objectFit: "contain" }} />

@@ -1,4 +1,4 @@
-import { mainContentAbove } from "@/data_fr/index/mainContent";
+import { mainContentAbove } from "@/data/home/mainContent";
 import React from "react";
 
 export const MainContentAbove: React.FC = () => {
