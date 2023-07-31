@@ -1,8 +1,8 @@
 import "./globals.css";
 import type { Metadata } from "next";
-
 import { Header } from "@/components/home/server/Header";
 import React from "react";
+import Providers from "@/components/Providers/Providers";
 
 export const metadata: Metadata = {
   title: "",
@@ -15,11 +15,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true}>
-        <Header />
-        {children}
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body suppressHydrationWarning={true}>
+          <Header />
+          {children}
+        </body>
+      </html>
+    </Providers>
   );
 }

@@ -38,9 +38,9 @@ export const Header: React.FC = () => {
   return (
     <header className="h-14 sticky w-full text-primary px-2">
       <nav className="items-center md:flex hidden justify-between w-full h-full flex-row">
-        <div className="flex w-24 overflow-clip">
+        <Link href={"/"} className="flex w-24 overflow-clip">
           <Logo />
-        </div>
+        </Link>
         {options.map((option, index) => (
           <a
             href={`/${option.slug}`}

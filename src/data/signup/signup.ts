@@ -3,6 +3,8 @@ interface IOptions {
   placeholder: string;
   label: string;
   required: boolean;
+  type: string;
+  regex?: RegExp;
   requiredLabel: string;
 }
 interface ISignup {
@@ -21,6 +23,7 @@ export const signup: ISignup = {
       placeholder: "Votre prénom",
       label: "Prénom",
       required: true,
+      type: "text",
       requiredLabel: "Le prénom est requis",
     },
     {
@@ -28,13 +31,16 @@ export const signup: ISignup = {
       placeholder: "Votre nom",
       label: "Nom",
       required: true,
+      type: "text",
       requiredLabel: "Le nom est requis",
     },
     {
       name: "email",
       placeholder: "Votre email",
       label: "Email",
+      regex: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/i,
       required: true,
+      type: "email",
       requiredLabel: "L'email est requis",
     },
     {
@@ -42,12 +48,14 @@ export const signup: ISignup = {
       placeholder: "Votre téléphone",
       label: "Téléphone",
       required: true,
+      type: "tel",
       requiredLabel: "Le téléphone est requis",
     },
     {
       name: "entreprise",
       placeholder: "Votre entreprise",
       label: "Entreprise",
+      type: "text",
       required: false,
       requiredLabel: "",
     },
@@ -56,6 +64,7 @@ export const signup: ISignup = {
       placeholder: "Votre site web",
       label: "Site web",
       required: false,
+      type: "url",
       requiredLabel: "",
     },
     {
@@ -63,6 +72,7 @@ export const signup: ISignup = {
       placeholder: "Votre mot de passe",
       label: "Mot de passe",
       required: true,
+      type: "password",
       requiredLabel: "Le mot de passe est requis",
     },
     {
@@ -70,6 +80,7 @@ export const signup: ISignup = {
       placeholder: "Confirmez votre mot de passe",
       label: "Confirmation",
       required: true,
+      type: "password",
       requiredLabel: "La confirmation est requise",
     },
   ],
