@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/home/server/Header";
 import React from "react";
 import Providers from "@/components/Providers/Providers";
+import { Footer } from "@/components/shared/Footer";
 
 export const metadata: Metadata = {
   title: "",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <body suppressHydrationWarning={true}>
           <Header />
           {children}
+          <Footer />
         </body>
       </html>
     </Providers>

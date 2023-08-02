@@ -30,3 +30,19 @@
 .st1 {
     fill: #C2AC82;
 }
+
+/*** Project [slug] overlay ***/
+
+.overlay{
+    position: absolute;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/*** React Resizable ***/
+
+
+

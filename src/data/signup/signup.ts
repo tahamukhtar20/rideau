@@ -56,8 +56,8 @@ export const signup: ISignup = {
       placeholder: "Votre entreprise",
       label: "Entreprise",
       type: "text",
-      required: false,
-      requiredLabel: "",
+      required: true,
+      requiredLabel: "L'entreprise est requise",
     },
     {
       name: "website",

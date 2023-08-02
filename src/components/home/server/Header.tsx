@@ -1,5 +1,5 @@
 import { options } from "@/data/home/header";
-import { HamburgerIcon, Logo, ProfileIcon } from "@/utils/SVG";
+import { HamburgerIcon, Logo, ProfileIcon } from "@/utils/Images";
 import Link from "next/link";
 import React from "react";
 
@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
     </>
   );
   return (
-    <header className="h-14 sticky w-full text-primary px-2">
+    <header className="h-14 sticky w-full text-primary px-2 shadow-lg">
       <nav className="items-center md:flex hidden justify-between w-full h-full flex-row">
         <Link href={"/"} className="flex w-24 overflow-clip">
           <Logo />
@@ -50,7 +50,7 @@ export const Header: React.FC = () => {
             {option.name}
           </a>
         ))}
-        <Link href={"/signup"}>
+        <Link href={"/signup"} className={"flex w-10"}>
           <ProfileIcon />
         </Link>
       </nav>

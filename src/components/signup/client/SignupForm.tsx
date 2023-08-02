@@ -5,57 +5,8 @@ import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { UtilsApi } from "@/routes/api/utils.api";
 import { ICountryCode } from "@/app/api/interfaces/country-codes";
-
-interface IField {
-  type: string;
-  name: string;
-  requiredLabel: string;
-  required: boolean;
-  placeholder: string;
-  register: any;
-  errors: any;
-  regex?: RegExp;
-  watch?: any;
-}
-
-const Label = ({ label, required }: { label: string; required: boolean }) => (
-  <td className="label font-black ml-1 lg:self-center lg:w-1/3 ">
-    <span className="label-text">
-      {label} {required && <span className="text-red-500">*</span>}
-    </span>
-  </td>
-);
-
-const DefaultField = ({
-  type,
-  name,
-  requiredLabel,
-  required,
-  placeholder,
-  register,
-  errors,
-  regex = /.*/,
-}: IField) => (
-  <td className="w-full flex flex-col">
-    {errors[name] && (
-      <div
-        className="tooltip tooltip-open tooltip-error"
-        data-tip={requiredLabel}
-      />
-    )}
-    <input
-      {...register(name, {
-        required: required,
-        pattern: {
-          value: regex,
-        },
-      })}
-      type={type}
-      placeholder={placeholder}
-      className="input input-bordered rounded input-md w-full"
-    />
-  </td>
-);
+import { DefaultField, IField } from "@/components/shared/DefaultField";
+import { Label } from "@/components/shared/Label";
 
 const PhoneField = ({
   type,

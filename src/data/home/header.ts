@@ -3,11 +3,11 @@
 export const options: IOption[] = [
   {
     name: "Créer votre projet",
-    slug: "",
+    slug: "projects",
   },
   {
     name: "Galerie",
-    slug: "",
+    slug: "gallery",
   },
 ];
 
