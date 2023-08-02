@@ -21,6 +21,7 @@
     "firebase": "^10.1.0",
     "firebase-admin": "^11.10.1",
     "firebase-functions": "^4.4.1",
+    "firebase-tools": "^12.4.6",
     "next": "13.4.12",
     "postcss": "8.4.27",
     "react": "18.2.0",
