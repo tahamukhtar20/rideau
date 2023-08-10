@@ -3,7 +3,7 @@ import React from "react";
 
 export const MainContentAbove: React.FC = () => {
   return (
-    <section className="bg-secondary min-h-fit px-6 py-8 sm:py-16 lg:py-24">
+    <section className="bg-secondary min-h-[calc(100vh-15.5rem)] flex flex-col items-center justify-center px-6 py-8 sm:py-16 lg:py-24">
       <div className="container mx-auto flex flex-col items-center">
         <h2 className="text-3xl sm:text-4xl md:text-5xl text-center font-quaternary text-primary-dark mb-8 sm:mb-12 md:mb-16">
           {mainContentAbove.title}

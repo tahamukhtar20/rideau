@@ -20,11 +20,26 @@ function Projects() {
           if (doc.exists()) {
             return doc.data().projects;
           } else {
-            console.log("No such document!");
+            toast.error("Aucun projet trouvé!", {
+              theme: "colored",
+              position: "top-center",
+            });
+            return null;
           }
         })
         .catch((error) => {
-          console.log("Error getting document:", error);
+          if (error.code === "permission-denied") {
+            toast.error("Permission refusée!", {
+              theme: "colored",
+              position: "top-center",
+            });
+            return;
+          } else {
+            toast.error("Erreur lors de la récupération des projets!", {
+              theme: "colored",
+              position: "top-center",
+            });
+          }
         });
       if (projects) {
         setFolders(projects);
@@ -39,7 +54,7 @@ function Projects() {
   const handleDeletion = (id: string) => {
     const deleteProject = async () => {
       if (auth.currentUser) {
-        const toastId = toast.loading("Deleting project...", {
+        const toastId = toast.loading("Suppression du projet...", {
           position: "top-center",
         });
         const user = auth.currentUser.uid;
@@ -51,7 +66,7 @@ function Projects() {
           .then(() => {
             fetchData().then(() => {
               toast.update(toastId, {
-                render: "Project deleted! 🎉",
+                render: "Projet supprimé!",
                 type: "success",
                 theme: "colored",
                 isLoading: false,
@@ -60,13 +75,24 @@ function Projects() {
             });
           })
           .catch((error) => {
-            toast.update(toastId, {
-              render: "Error deleting project!",
-              type: "error",
-              theme: "colored",
-              isLoading: false,
-              autoClose: 2000,
-            });
+            if (error.code === "permission-denied") {
+              toast.update(toastId, {
+                render: "Permission refusée!",
+                type: "error",
+                theme: "colored",
+                isLoading: false,
+                autoClose: 2000,
+              });
+              return;
+            } else {
+              toast.update(toastId, {
+                render: "Erreur lors de la suppression du projet!",
+                type: "error",
+                theme: "colored",
+                isLoading: false,
+                autoClose: 2000,
+              });
+            }
           });
       }
     };
@@ -75,7 +101,7 @@ function Projects() {
   const newProjectHandler = () => {
     const updateProjects = async () => {
       if (auth.currentUser) {
-        const toastId = toast.loading("Creating new project...", {
+        const toastId = toast.loading("Création d'un nouveau projet...", {
           position: "top-center",
         });
         const user = auth.currentUser.uid;
@@ -100,7 +126,7 @@ function Projects() {
           .then(() => {
             fetchData().then(() => {
               toast.update(toastId, {
-                render: "New project created! 🎉",
+                render: "Nouveau projet créé!",
                 type: "success",
                 theme: "colored",
                 isLoading: false,
@@ -110,7 +136,7 @@ function Projects() {
           })
           .catch((error) => {
             toast.update(toastId, {
-              render: `Error creating new project: ${error}`,
+              render: `Erreur lors de la création d'un nouveau projet: ${error}`,
               type: "error",
               theme: "colored",
               isLoading: false,

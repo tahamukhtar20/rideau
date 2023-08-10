@@ -18,7 +18,7 @@ const ProjectExistenceRoute = ({ children }: { children: React.ReactNode }) => {
         const user = auth.currentUser.uid;
         const userCollection = collection(database, "users");
         const userDocRef = doc(userCollection, user);
-        const projects = await getDoc(userDocRef)
+        await getDoc(userDocRef)
           .then((doc: any) => {
             if (doc.exists()) {
               doc.data().projects.forEach((project: any) => {
@@ -52,12 +52,12 @@ const ProjectExistenceRoute = ({ children }: { children: React.ReactNode }) => {
       children
     ) : (
       <main className="min-h-[calc(100vh-15.5rem)] w-full grid place-items-center">
-        <span className="loading loading-dots loading-lg text-primary"></span>
+        <span className="loading loading-infinity loading-lg text-primary"></span>
       </main>
     )
   ) : (
     <main className="min-h-[calc(100vh-15.5rem)] w-full grid place-items-center">
-      <span className="loading loading-dots loading-lg text-primary"></span>
+      <span className="loading loading-infinity loading-lg text-primary"></span>
     </main>
   );
 };

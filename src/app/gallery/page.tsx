@@ -4,7 +4,14 @@ import { galleryTitle } from "@/data/gallery/gallery";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
 import Image from "next/image";
-import { getDownloadURL, getStorage, listAll, ref } from "@firebase/storage"; // Import the styles
+import {
+  getDownloadURL,
+  getStorage,
+  list,
+  listAll,
+  ref,
+} from "@firebase/storage";
+import { toast } from "react-toastify"; // Import the styles
 
 export default function Gallery() {
   const [photoIndex, setPhotoIndex] = useState(0);
@@ -20,8 +27,19 @@ export default function Gallery() {
           images.items.map((image) => getDownloadURL(image))
         );
         setImages(urls);
-      } catch (error) {
-        console.error("Error loading images:", error);
+      } catch (error: any) {
+        if (error.code === "storage/object-not-found") {
+          toast.error("Aucune image trouvée", {
+            theme: "colored",
+            position: "top-center",
+          });
+        } else {
+          toast.error("Erreur lors du chargement des images:" + error, {
+            theme: "colored",
+            position: "top-center",
+          });
+          console.error("Erreur lors du chargement des images:", error);
+        }
       }
     };
     fetchData().then();

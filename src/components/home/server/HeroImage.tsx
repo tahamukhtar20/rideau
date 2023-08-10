@@ -6,9 +6,9 @@ export const HeroImage: React.FC = () => {
   return (
     <>
       <Image
+        className="object-cover w-full min-h-[calc(100vh-15.5rem)]"
         alt={"HeroComponentImage"}
         src={HeroImageWebP}
-        style={{ objectFit: "cover", width: "100%", height: "100%" }}
       ></Image>
     </>
   );

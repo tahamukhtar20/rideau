@@ -21,7 +21,7 @@ export default function LoginForm() {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   async function formHandler(data: any) {
-    const toastId = toast.loading("Logging In...", {
+    const toastId = toast.loading("Se connecter...", {
       theme: "colored",
       position: "top-center",
     });
@@ -29,25 +29,39 @@ export default function LoginForm() {
       setSubmitting(true);
       await signInWithEmailAndPassword(auth, data.email, data.password);
       toast.update(toastId, {
-        render: "Logged In! Redirecting to Home",
+        render: "Connecté! Redirection vers la page d'accueil",
         type: "success",
         theme: "colored",
         isLoading: false,
         autoClose: 2000,
       });
-      setTimeout(() => {
-        toast.dismiss(toastId);
-        router.push("/");
-      }, 3000);
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.update(toastId, {
-        render: `Login Error: ${error}`,
-        theme: "colored",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
+    } catch (error: any) {
+      if (error.code === "auth/user-not-found") {
+        toast.update(toastId, {
+          render: "Utilisateur non trouvé",
+          type: "error",
+          theme: "colored",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
+      if (error.code === "auth/wrong-password") {
+        toast.update(toastId, {
+          render: "Mot de passe incorrect",
+          type: "error",
+          theme: "colored",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else {
+        toast.update(toastId, {
+          render: "Erreur de connexion :" + error,
+          type: "error",
+          theme: "colored",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
     } finally {
       setSubmitting(false);
       reset();

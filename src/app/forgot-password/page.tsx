@@ -19,14 +19,18 @@ export default function ForgotPassword() {
   } = useForm();
   const router = useRouter();
   async function formHandler(data: any) {
-    const toastId = toast.loading("Sending Password Reset Email...", {
-      theme: "colored",
-      position: "top-center",
-    });
+    const toastId = toast.loading(
+      "Envoi de l'e-mail de réinitialisation du mot de passe...",
+      {
+        theme: "colored",
+        position: "top-center",
+      }
+    );
     try {
       await sendPasswordResetEmail(auth, data.email);
       toast.update(toastId, {
-        render: "Password Reset Email Sent! Redirecting to Login",
+        render:
+          "E-mail de réinitialisation du mot de passe envoyé! Rediriger pour se connecter",
         type: "success",
         theme: "colored",
         isLoading: false,
@@ -39,7 +43,7 @@ export default function ForgotPassword() {
     } catch (error: any) {
       if (error.code === "auth/user-not-found") {
         toast.update(toastId, {
-          render: "User not found",
+          render: "Utilisateur non trouvé",
           type: "error",
           theme: "colored",
           isLoading: false,
@@ -47,7 +51,7 @@ export default function ForgotPassword() {
         });
       } else {
         toast.update(toastId, {
-          render: "Forgot Password error:" + error,
+          render: "Erreur de mot de passe oublié :" + error,
           type: "error",
           theme: "colored",
           isLoading: false,

@@ -24,16 +24,23 @@ export const Header: React.FC = () => {
       .signOut()
       .then(() => {
         setLoggedIn(null);
-        toast.success("Logout successful", {
+        toast.success("Déconnexion réussie", {
           position: "top-center",
           theme: "colored",
         });
       })
       .catch((error) => {
-        toast.error(error.message, {
-          theme: "colored",
-          position: "top-center",
-        });
+        if (error.code === "auth/user-not-found") {
+          toast.error("Utilisateur non trouvé", {
+            theme: "colored",
+            position: "top-center",
+          });
+        } else {
+          toast.error("Erreur de déconnexion :" + error, {
+            theme: "colored",
+            position: "top-center",
+          });
+        }
       });
   };
   const hamburgerMenu = (
@@ -202,11 +209,8 @@ export const Header: React.FC = () => {
     <>
       <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
       <div className="drawer-side ">
-        <label
-          htmlFor="my-drawer-3"
-          className="drawer-overlay fixed z-[9999]"
-        ></label>
-        <ul className="menu p-4 w-80 h-full bg-secondary fixed z-[9999] top-0 left-0">
+        <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
+        <ul className="menu p-4 w-80 h-screen bg-secondary fixed z-[100] top-0 left-0">
           {options.map((option, index) => (
             <li key={index} className="">
               <button

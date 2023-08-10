@@ -121,7 +121,7 @@ export default function SignupForm() {
   const [submitting, setSubmitting] = useState(false);
 
   async function formHandler(data: any) {
-    const toastId = toast.loading("Signing up...", {
+    const toastId = toast.loading("S'enregistrer...", {
       theme: "colored",
       position: "top-center",
     });
@@ -149,7 +149,9 @@ export default function SignupForm() {
           company: data.company,
         }).then(() => {
           toast.update(toastId, {
-            render: "Signup successful! Redirecting to Home",
+            render:
+              "\n" +
+              "Inscription réussie! Redirection vers la page d'accueil...",
             type: "success",
             theme: "colored",
             isLoading: false,
@@ -157,15 +159,49 @@ export default function SignupForm() {
           });
         });
       }
-    } catch (error) {
-      console.error("Signup error:", error);
-      toast.update(toastId, {
-        render: `Signup Error: ${error}`,
-        theme: "colored",
-        type: "error",
-        isLoading: false,
-        autoClose: 2000,
-      });
+    } catch (error: any) {
+      if (error.code === "auth/email-already-in-use") {
+        toast.update(toastId, {
+          render: "Cette adresse e-mail est déjà utilisée!",
+          theme: "colored",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else if (error.code === "auth/invalid-email") {
+        toast.update(toastId, {
+          render: "Adresse e-mail invalide!",
+          theme: "colored",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else if (error.code === "auth/weak-password") {
+        toast.update(toastId, {
+          render: "Mot de passe faible!",
+          theme: "colored",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else if (error.code === "auth/operation-not-allowed") {
+        toast.update(toastId, {
+          render: "Opération non autorisée!",
+          theme: "colored",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      } else {
+        console.error("Signup error:", error);
+        toast.update(toastId, {
+          render: `Erreur d'inscription: ${error}`,
+          theme: "colored",
+          type: "error",
+          isLoading: false,
+          autoClose: 2000,
+        });
+      }
     } finally {
       setSubmitting(false);
       reset();

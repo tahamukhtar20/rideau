@@ -21,13 +21,13 @@ const AuthenticatedRoute = ({ children }: { children: React.ReactNode }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router]);
 
   return loggedIn !== null ? (
     children
   ) : (
     <main className="min-h-[calc(100vh-15.5rem)] w-full grid place-items-center">
-      <span className="loading loading-dots loading-lg text-primary"></span>
+      <span className="loading loading-infinity loading-lg text-primary"></span>
     </main>
   );
 };
