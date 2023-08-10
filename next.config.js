@@ -6,6 +6,9 @@ const nextConfig = {
       "images.unsplash.com",
       "cdn.sanity.io",
       "localhost",
+      "flowbite.s3.amazonaws.com",
+      "firebasestorage.googleapis.com",
+      "via.placeholder.com",
     ],
   },
 };

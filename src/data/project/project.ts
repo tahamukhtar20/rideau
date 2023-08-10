@@ -5,8 +5,12 @@ interface IProject {
   surfaceArea: string;
   price: string;
   dragAndDropImages: string;
+  reset: string;
+  uploading: string;
 }
 export const project: IProject = {
+  reset: "réinitialiser",
+  uploading: "téléchargement...",
   uploadImage: "télécharger une image",
   save: "sauvegarder",
   export: "exporter",

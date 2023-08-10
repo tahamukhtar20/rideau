@@ -1,27 +1,31 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { galleryTitle } from "@/data/gallery/gallery";
 import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css"; // Import the styles
+import "react-image-lightbox/style.css";
+import Image from "next/image";
+import { getDownloadURL, getStorage, listAll, ref } from "@firebase/storage"; // Import the styles
 
 export default function Gallery() {
-  const images = [
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-1.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-2.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-3.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-4.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-5.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-6.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-7.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-8.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-9.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-10.jpg",
-    "https://flowbite.s3.amazonaws.com/docs/gallery/masonry/image-11.jpg",
-  ];
-
   const [photoIndex, setPhotoIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const storage = getStorage();
+      const storageRef = ref(storage, "Gallery/");
+      try {
+        const images = await listAll(storageRef);
+        const urls = await Promise.all(
+          images.items.map((image) => getDownloadURL(image))
+        );
+        setImages(urls);
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    };
+    fetchData().then();
+  }, []);
 
   const openLightbox = (index: number) => {
     setPhotoIndex(index);
@@ -34,15 +38,36 @@ export default function Gallery() {
         <h1 className="text-4xl font-bold uppercase">{galleryTitle}</h1>
       </section>
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4">
-        {images.map((image, index) => (
-          <div key={index} onClick={() => openLightbox(index)}>
-            <img
-              className="h-auto max-w-full rounded-lg cursor-pointer"
-              src={image}
-              alt=""
-            />
-          </div>
-        ))}
+        {images.length === 0 ? (
+          <>
+            <div className="animate-pulse flex flex-col items-center justify-center bg-gray-200 rounded-box aspect-video my-8">
+              <div className="w-16 h-2 bg-gray-300 rounded-full mt-2"></div>
+              <div className="w-20 h-20 bg-gray-300 rounded"></div>
+            </div>
+            <div className="animate-pulse flex flex-col items-center justify-center bg-gray-200 rounded-box aspect-video my-8">
+              <div className="w-16 h-2 bg-gray-300 rounded-full mt-2"></div>
+              <div className="w-20 h-20 bg-gray-300 rounded"></div>
+            </div>
+            <div className="animate-pulse flex flex-col items-center justify-center bg-gray-200 rounded-box aspect-video my-8">
+              <div className="w-16 h-2 bg-gray-300 rounded-full mt-2"></div>
+              <div className="w-20 h-20 bg-gray-300 rounded"></div>
+            </div>
+          </>
+        ) : (
+          images.map((image, index) => (
+            <div key={index}>
+              <Image
+                key={index}
+                onClick={() => openLightbox(index)}
+                className="rounded-lg cursor-pointer object-cover"
+                width={500}
+                height={500}
+                src={image}
+                alt=""
+              />
+            </div>
+          ))
+        )}
       </section>
       {isOpen && (
         <Lightbox

@@ -11,6 +11,7 @@ interface ISignup {
   title: string;
   options: IOptions[];
   passwordDontMatch: string;
+  alreadyHaveAccount: string;
   submit: {
     label: string;
   };
@@ -52,7 +53,7 @@ export const signup: ISignup = {
       requiredLabel: "Le téléphone est requis",
     },
     {
-      name: "entreprise",
+      name: "company",
       placeholder: "Votre entreprise",
       label: "Entreprise",
       type: "text",
@@ -85,6 +86,7 @@ export const signup: ISignup = {
     },
   ],
   passwordDontMatch: "Les mots de passe ne correspondent pas",
+  alreadyHaveAccount: "Vous avez déjà un compte ? Connectez-vous",
   submit: {
     label: "S'inscrire",
   },

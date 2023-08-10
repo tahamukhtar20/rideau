@@ -2,6 +2,8 @@ interface ILogin {
   title: string;
   options: IOptions[];
   incorrectEmailOrPassword: string;
+  dontHaveAccount: string;
+  forgotPassword: string;
   submit: {
     label: string;
   };
@@ -39,6 +41,8 @@ export const login: ILogin = {
     },
   ],
   incorrectEmailOrPassword: "Email ou mot de passe incorrect",
+  dontHaveAccount: "Vous n'avez pas de compte ? Créez-en un ici",
+  forgotPassword: "Mot de passe oublié ?",
   submit: {
     label: "Se connecter",
   },
