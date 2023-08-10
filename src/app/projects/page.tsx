@@ -86,7 +86,7 @@ function Projects() {
             ...folders,
             {
               id: `${new Date().getTime()}-project`,
-              name: `${new Date().getTime()}-project-name`,
+              name: `${new Date().getTime()}-project`,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
               canvasURL: "",
