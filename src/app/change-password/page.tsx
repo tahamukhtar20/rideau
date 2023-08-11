@@ -86,7 +86,7 @@ function ForgotPassword() {
     }
   }
   return (
-    <main className="min-h-[calc(100vh-15.5rem)] flex flex-col items-center py-10">
+    <>
       <form
         className="w-full flex justify-center"
         onSubmit={handleSubmit(formHandler)}
@@ -158,7 +158,7 @@ function ForgotPassword() {
           </tbody>
         </table>
       </form>
-    </main>
+    </>
   );
 }
 

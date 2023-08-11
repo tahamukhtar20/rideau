@@ -148,7 +148,7 @@ function Projects() {
     updateProjects().then();
   };
   return (
-    <main className="min-h-[calc(100vh-15.5rem)] font-secondary text-primary  bg-secondary flex flex-col">
+    <>
       <h1 className=" w-full text-center text-4xl p-2 shadow-lg capitalize">
         {productsTitle}
       </h1>
@@ -190,7 +190,7 @@ function Projects() {
           <span className="font-quaternary text-7xl">+</span>
         </button>
       </section>
-    </main>
+    </>
   );
 }
 

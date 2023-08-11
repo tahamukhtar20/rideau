@@ -15,6 +15,7 @@ import {
 } from "@firebase/storage";
 import { auth } from "@/firebase/config";
 import html2canvas from "html2canvas";
+import authProtection from "@/components/HOC/authProtection";
 
 const DraggableImage = ({ src }: { src: string }) => {
   return (
@@ -371,4 +372,4 @@ function Project({ params: { id } }: { params: { id: string } }) {
   );
 }
 
-export default projectExistenceCheck(Project);
+export default projectExistenceCheck(authProtection(Project));

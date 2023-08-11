@@ -57,122 +57,119 @@ function EditProfile() {
   // @ts-ignore
   return (
     <>
-      <main className="min-h-[calc(100vh-15.5rem)] flex flex-col items-center py-14">
-        <h1 className="font-secondary text-3xl lg:text-4xl my-10 lg:my-2">
-          {jsonData.pageContent.title}
-        </h1>
-        <form className="w-full flex justify-center my-4">
-          <div className="w-full max-w-[38rem] flex items-center lg:block px-4 flex-col">
-            {jsonData.pageContent.formFields.map((field) => (
-              <div
-                key={field.label}
-                className="flex lg:flex-row flex-col justify-between lg:items-center mb-4"
+      <h1 className="font-secondary text-3xl lg:text-4xl my-10 lg:my-2">
+        {jsonData.pageContent.title}
+      </h1>
+      <form className="w-full flex justify-center my-4">
+        <div className="w-full max-w-[38rem] flex items-center lg:block px-4 flex-col">
+          {jsonData.pageContent.formFields.map((field) => (
+            <div
+              key={field.label}
+              className="flex lg:flex-row flex-col justify-between lg:items-center mb-4"
+            >
+              <label
+                className="text-sm label font-black"
+                htmlFor={field.inputId}
               >
-                <label
-                  className="text-sm label font-black"
-                  htmlFor={field.inputId}
-                >
-                  {field.label.charAt(0).toUpperCase() + field.label.slice(1)}
-                </label>
-                <div className="join max-w-[20rem]">
-                  {field.inputId === "phone" ? (
-                    <input
-                      className="z-0 input join-item w-1/3 pr-0"
-                      id="countryCode"
-                      name="countryCode"
-                      value={country}
-                      disabled={true}
-                    ></input>
-                  ) : (
-                    <></>
-                  )}
+                {field.label.charAt(0).toUpperCase() + field.label.slice(1)}
+              </label>
+              <div className="join max-w-[20rem]">
+                {field.inputId === "phone" ? (
                   <input
-                    className="input join-item w-full"
-                    type={field.inputType === "password" ? "password" : "text"}
-                    id={field.inputId}
-                    name={field.inputId}
-                    placeholder={field.placeholder}
-                    // @ts-ignore
-                    value={profile[field.inputId]}
-                    disabled={true}
-                  />
-                  {field.inputType === "password" ? (
-                    <button
-                      onClick={() => {
-                        router.push("/change-password");
-                      }}
-                      type="button"
-                      className="btn btn-primary bg-primary text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary join-item"
+                    className="join-item input input-disabled w-1/3 pr-0"
+                    id="countryCode"
+                    name="countryCode"
+                    value={country}
+                  ></input>
+                ) : (
+                  <></>
+                )}
+                <input
+                  className="input join-item w-full"
+                  type={field.inputType === "password" ? "password" : "text"}
+                  id={field.inputId}
+                  name={field.inputId}
+                  placeholder={field.placeholder}
+                  // @ts-ignore
+                  value={profile[field.inputId]}
+                  disabled={true}
+                />
+                {field.inputType === "password" ? (
+                  <button
+                    onClick={() => {
+                      router.push("/change-password");
+                    }}
+                    type="button"
+                    className="btn btn-primary bg-primary text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary join-item"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      fill="none"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24px"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z"
-                          className="stroke-secondary"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M21 21H12"
-                          className="stroke-secondary"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-primary flex bg-primary text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary join-item"
-                      type="button"
-                      onClick={() => {
-                        setField(field);
-                      }}
+                      <path
+                        d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z"
+                        className="stroke-secondary"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M21 21H12"
+                        className="stroke-secondary"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-primary flex bg-primary text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary join-item"
+                    type="button"
+                    onClick={() => {
+                      setField(field);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      fill="none"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24px"
-                        height="24px"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                      >
-                        <path
-                          d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z"
-                          className="stroke-secondary"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M21 21H12"
-                          className="stroke-secondary"
-                          strokeWidth="1.5"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </button>
-                  )}
-                </div>
+                      <path
+                        d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z"
+                        className="stroke-secondary"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M21 21H12"
+                        className="stroke-secondary"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                )}
               </div>
-            ))}
-          </div>
-        </form>
-        {Field !== null && (
-          <ChangeModal
-            field={Field?.label}
-            otherFields={Field}
-            setReRender={setReRender}
-            setField={setField}
-          />
-        )}
-      </main>
+            </div>
+          ))}
+        </div>
+      </form>
+      {Field !== null && (
+        <ChangeModal
+          field={Field?.label}
+          otherFields={Field}
+          setReRender={setReRender}
+          setField={setField}
+        />
+      )}
     </>
   );
 }

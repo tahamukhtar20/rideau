@@ -51,7 +51,7 @@ export default function Gallery() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-15.5rem)] font-secondary text-primary bg-white flex flex-col">
+    <>
       <section className="flex flex-col items-center justify-center h-full py-4">
         <h1 className="text-4xl font-bold uppercase">{galleryTitle}</h1>
       </section>
@@ -101,6 +101,6 @@ export default function Gallery() {
           }
         />
       )}
-    </main>
+    </>
   );
 }

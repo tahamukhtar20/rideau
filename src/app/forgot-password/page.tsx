@@ -10,8 +10,9 @@ import { sendPasswordResetEmail } from "@firebase/auth";
 import { auth } from "@/firebase/config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import unAuthProtection from "@/components/HOC/unAuthProtection";
 
-export default function ForgotPassword() {
+function ForgotPassword() {
   const {
     register,
     handleSubmit,
@@ -61,7 +62,7 @@ export default function ForgotPassword() {
     }
   }
   return (
-    <main className="min-h-[calc(100vh-15.5rem)] flex flex-col items-center py-10">
+    <>
       <form
         className="w-full flex justify-center"
         onSubmit={handleSubmit(formHandler)}
@@ -101,6 +102,8 @@ export default function ForgotPassword() {
           </tbody>
         </table>
       </form>
-    </main>
+    </>
   );
 }
+
+export default unAuthProtection(ForgotPassword);
