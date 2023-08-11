@@ -23,7 +23,9 @@ const ProjectExistenceRoute = ({ children }: { children: React.ReactNode }) => {
           .then((doc: any) => {
             if (doc.exists()) {
               doc.data().projects.forEach((project: any) => {
-                projectExist = project.id === slug;
+                if (project.id === slug) {
+                  projectExist = true;
+                }
               });
             } else {
               projectExist = false;

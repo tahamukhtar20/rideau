@@ -15,6 +15,7 @@ import {
 import { auth } from "@/firebase/config";
 import html2canvas from "html2canvas";
 import authProtection from "@/components/HOC/authProtection";
+import { toast } from "react-toastify";
 
 const DraggableImage = ({ src }: { src: string }) => {
   return (
@@ -34,7 +35,6 @@ const DraggableImage = ({ src }: { src: string }) => {
           alt={"dndImage"}
           draggable={false}
           fill={true}
-          className="rounded-md"
         />
       </div>
     </Rnd>
@@ -208,7 +208,10 @@ function Project({ params: { id } }: { params: { id: string } }) {
         setImages(urls);
         setIsLoading(false);
       } catch (error) {
-        console.error("Error loading images:", error);
+        toast.error("Error loading images: " + error, {
+          position: "top-center",
+          theme: "colored",
+        });
         setIsLoading(false);
       }
     };
@@ -216,6 +219,7 @@ function Project({ params: { id } }: { params: { id: string } }) {
   }, []);
 
   const contactSales = () => {
+    2;
     const fetchSalesEmail = async () => {
       const response = await fetch("/api/mail", {
         method: "POST",
@@ -320,7 +324,7 @@ function Project({ params: { id } }: { params: { id: string } }) {
             </button>
           </div>
         </div>
-        <div className={`w-1/3 bg-secondary h-[calc(100vh-3.5rem)] relative`}>
+        <div className={`w-1/3 bg-secondary h-[calc(100vh-3.5rem)]`}>
           {isLoading && (
             <div className="overlay flex justify-center items-center">
               <h1 className="text-xl text-red-500 uppercase">Loading...</h1>
@@ -339,7 +343,7 @@ function Project({ params: { id } }: { params: { id: string } }) {
                 "h-full w-full overflow-auto grid grid-cols-2 gap-4 p-4"
               }
             >
-              <div className="col-span-2 h-10 rounded-lg bg-primary-dark text-white flex justify-center  items-center">
+              <div className="col-span-2 h-10 rounded-lg bg-primary-dark text-white flex justify-center items-center">
                 <h4>{project.dragAndDropImages}</h4>
               </div>
               {images.map((key, index) => (
