@@ -67,32 +67,19 @@ export const Header: React.FC = () => {
           className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 "
         >
           <li>
-            <button
-              onClick={() => {
-                router.push("/edit-profile");
-                document.getElementById("my-drawer-3")?.click();
-              }}
-              className="capitalize"
-            >
+            <Link href={"edit-profile"} className="capitalize">
               {profile.editProfile}
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => {
-                router.push("/projects");
-                document.getElementById("my-drawer-3")?.click();
-              }}
-              className="capitalize"
-            >
+            <Link href={"/projects"} className="capitalize">
               {profile.projects}
-            </button>
+            </Link>
           </li>
           <li>
             <button
               onClick={() => {
                 handleClick();
-                document.getElementById("my-drawer-3")?.click();
               }}
               className="capitalize"
             >
@@ -117,26 +104,14 @@ export const Header: React.FC = () => {
           className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
         >
           <li>
-            <button
-              onClick={() => {
-                router.push("/signup");
-                document.getElementById("my-drawer-3")?.click();
-              }}
-              className={"capitalize"}
-            >
+            <Link href={"/signup"} className={"capitalize"}>
               {profile.signup}
-            </button>
+            </Link>
           </li>
           <li>
-            <button
-              onClick={() => {
-                router.push("/login");
-                document.getElementById("my-drawer-3")?.click();
-              }}
-              className={"capitalize"}
-            >
+            <Link href={"/login"} className={"capitalize"}>
               {profile.login}
-            </button>
+            </Link>
           </li>
         </ul>
       </div>
