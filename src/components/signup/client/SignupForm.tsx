@@ -127,7 +127,6 @@ export default function SignupForm() {
     });
     try {
       setSubmitting(true);
-
       const userCredentials = await createUserWithEmailAndPassword(
         auth,
         data.email,
