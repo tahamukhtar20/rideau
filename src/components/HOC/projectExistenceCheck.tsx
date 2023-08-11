@@ -15,6 +15,7 @@ const ProjectExistenceRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const fetchData = async (slug: string) => {
       if (auth.currentUser && slug) {
+        let projectExist = false;
         const user = auth.currentUser.uid;
         const userCollection = collection(database, "users");
         const userDocRef = doc(userCollection, user);
@@ -22,23 +23,17 @@ const ProjectExistenceRoute = ({ children }: { children: React.ReactNode }) => {
           .then((doc: any) => {
             if (doc.exists()) {
               doc.data().projects.forEach((project: any) => {
-                if (project.id === slug) {
-                  setProjectExists(true);
-                } else {
-                  setProjectExists(false);
-                  router.push("/projects");
-                }
+                projectExist = project.id === slug;
               });
             } else {
-              setProjectExists(false);
-              router.push("/projects");
+              projectExist = false;
             }
           })
           .catch((error: any) => {
-            console.log("Error getting document:", error);
-            setProjectExists(false);
-            router.push("/projects");
+            projectExist = false;
           });
+        setProjectExists(projectExist);
+        if (!projectExist) router.push("/projects");
       } else {
         setProjectExists(false);
         router.push("/projects");

@@ -4,7 +4,6 @@ import { project } from "@/data/project/project";
 import Image from "next/image";
 import { Rnd } from "react-rnd";
 import Compressor from "compressorjs";
-import { toPng } from "html-to-image";
 import projectExistenceCheck from "@/components/HOC/projectExistenceCheck";
 import {
   getDownloadURL,
@@ -34,29 +33,9 @@ const DraggableImage = ({ src }: { src: string }) => {
           unoptimized={true}
           alt={"dndImage"}
           draggable={false}
+          fill={true}
           className="rounded-md"
         />
-
-        <div className="w-full h-2 border-gray-500 border absolute flex justify-center frameClass gap-0.5 items-center top-0">
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-        </div>
-        <div className="w-2 h-full border-gray-500 border absolute flex flex-col justify-center frameClass gap-0.5 items-center right-0">
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-        </div>
-        <div className="w-2 h-full border-gray-500 border absolute flex flex-col justify-center frameClass gap-0.5 items-center left-0">
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-        </div>
-        <div className="w-full h-2 border-gray-500 border absolute flex justify-center frameClass gap-0.5 items-center bottom-0">
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-          <span className="h-1 aspect-square rounded-full bg-black "></span>
-        </div>
       </div>
     </Rnd>
   );
@@ -115,11 +94,9 @@ function Project({ params: { id } }: { params: { id: string } }) {
   };
 
   const calculatePrice = () => {
-    const basePrice = 100;
-    const pricePerSquareMeter = 50;
     if (surfaceArea) {
       if (surfaceArea < 0) return 0;
-      return basePrice + surfaceArea * pricePerSquareMeter;
+      return Math.round((surfaceArea / 100) * 1.5 * 100) / 100;
     }
     return 0;
   };
@@ -161,51 +138,50 @@ function Project({ params: { id } }: { params: { id: string } }) {
     if (!imageFile) return;
     let imageUrl = "";
     let wholeImage = "";
+    if (inputSurfaceAreaRef.current) {
+      const surfaceArea = inputSurfaceAreaRef.current.value;
+      if (surfaceArea) {
+        setSurfaceArea(parseInt(surfaceArea));
+      }
+    }
     await uploadImageToFireBase(imageFile)
       .then((url: any) => {
         imageUrl = url;
-        console.log("Image URL:", url);
       })
       .catch((error) => {
         imageUrl = "";
-        console.log("Error:", error);
       });
     if (imageUrl === "") return;
-    document.querySelectorAll(".frameClass").forEach((el) => {
-      el.classList.add("hidden");
+    const canvas = html2canvasRef.current;
+    if (!canvas) return;
+    const canvasData = await html2canvas(canvas, {
+      useCORS: true,
+      allowTaint: true,
     });
-    const canvas = await toPng(html2canvasRef.current!, {
-      cacheBust: true,
-    }).then((dataUrl) => {
-      wholeImage = dataUrl;
-      return dataUrl;
-    });
-    console.log("Canvas:", canvas);
-    document.querySelectorAll(".frameClass").forEach((el) => {
-      el.classList.remove("hidden");
-    });
-    let canvasDataURL = await fetch(canvas).then((res) => res.blob());
-    const uniqueIdentifier = new Date().getTime(); // Generate a unique identifier
-    const originalFileName = canvasDataURL?.name || "image";
-    const newFileName = `user_${uniqueIdentifier}_${originalFileName}_${auth.currentUser?.uid}`;
-    canvasDataURL = new File([canvasDataURL as Blob], newFileName, {
-      type: canvasDataURL?.type,
-    });
-    const a = document.createElement("a");
-    a.style.display = "none";
-    document.body.appendChild(a);
-    a.href = canvas;
-    a.download = `project_export.png`;
-    a.click();
-    document.body.removeChild(a);
-    await uploadImageToFireBase(canvasDataURL)
-      .then((url: any) => {
-        wholeImage = url;
-      })
-      .catch((error) => {
-        wholeImage = "";
-        console.log("Error:", error);
+    if (canvasData) {
+      const canvasURL = canvasData.toDataURL("image/png");
+      const image = await fetch(canvasURL);
+      const blob = await image.blob();
+      let file: File = new File([blob], "wholeImage", {
+        type: "image/jpeg",
       });
+      new Compressor(file, {
+        quality: 0.6,
+        success(result: File) {
+          file = result;
+        },
+      });
+      if (file) {
+        await uploadImageToFireBase(file)
+          .then((url: any) => {
+            wholeImage = url;
+          })
+          .catch((error) => {
+            wholeImage = "";
+            console.error(error);
+          });
+      }
+    }
     return {
       wholeImage,
       imageUrl,
@@ -230,15 +206,32 @@ function Project({ params: { id } }: { params: { id: string } }) {
           images.items.map((image) => getDownloadURL(image))
         );
         setImages(urls);
-        setIsLoading(false); // Set isLoading to false when images are loaded
+        setIsLoading(false);
       } catch (error) {
         console.error("Error loading images:", error);
-        setIsLoading(false); // Set isLoading to false on error as well
+        setIsLoading(false);
       }
     };
     setImagesFirebase().then();
   }, []);
 
+  const contactSales = () => {
+    const fetchSalesEmail = async () => {
+      const response = await fetch("/api/mail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "John Doe",
+          email: "",
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+    };
+    fetchSalesEmail().then();
+  };
   return (
     <section className="w-full h-full">
       <div className="flex flex-row w-full h-full ">
@@ -292,7 +285,7 @@ function Project({ params: { id } }: { params: { id: string } }) {
               onChange={(e) => setSurfaceArea(parseFloat(e.target.value))}
             />
             <h1 className="w-full items-center flex">
-              <span>m</span>
+              <span>cm</span>
               <span className="text-xs align-top">2</span>
               <span>&nbsp;:</span>
             </h1>
@@ -317,6 +310,13 @@ function Project({ params: { id } }: { params: { id: string } }) {
               onClick={handleReset}
             >
               {project.reset}
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary bg-primary text-white hover:bg-white hover:text-primary hover:border-primary btn-sm rounded border-primary"
+              onClick={contactSales}
+            >
+              {project.contactSales}
             </button>
           </div>
         </div>

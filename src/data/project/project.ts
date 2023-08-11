@@ -7,9 +7,11 @@ interface IProject {
   dragAndDropImages: string;
   reset: string;
   uploading: string;
+  contactSales: string;
 }
 export const project: IProject = {
   reset: "réinitialiser",
+  contactSales: "contacter les ventes",
   uploading: "téléchargement...",
   uploadImage: "télécharger une image",
   save: "sauvegarder",

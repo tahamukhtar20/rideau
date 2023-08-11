@@ -9,8 +9,11 @@ import { ToastContainer } from "react-toastify";
 import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
-  title: "",
-  description: "",
+  title: "créadhésif",
+  description: "créadhésif-SAS",
+  other: {
+    google: "notranslate",
+  },
 };
 
 export default function RootLayout({
@@ -20,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <Providers>
-      <html lang="en">
+      <html lang="en" translate="no">
         <body suppressHydrationWarning={true}>
           <Header />
           {children}
