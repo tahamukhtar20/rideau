@@ -58,16 +58,17 @@ function Projects() {
         const toastId = toast.loading("Suppression du projet...", {
           position: "top-center",
         });
-        const user = auth.currentUser.uid;
+        const user = auth.currentUser?.uid;
         const userCollection = collection(database, "users");
         const userDocRef = doc(userCollection, user);
         const storage = getStorage();
-        const storageRef = ref(storage, `users/${user}/${id}`);
+        const storageRef = ref(storage, `User Scrap Data/${user}/${id}/`);
         const fileList = await listAll(storageRef);
-        for (const itemRef of fileList.items) {
-          await deleteObject(itemRef).then();
-        }
-
+        try {
+          for (const itemRef of fileList.items) {
+            await deleteObject(itemRef).then();
+          }
+        } catch (error) {}
         await updateDoc(userDocRef, {
           projects: [...folders.filter((folder: any) => folder.id !== id)],
         })
