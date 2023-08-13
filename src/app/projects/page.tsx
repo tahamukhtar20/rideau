@@ -7,6 +7,7 @@ import { auth, database } from "@/firebase/config";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { collection, doc, getDoc, updateDoc } from "@firebase/firestore";
+import { deleteObject, getStorage, ref } from "@firebase/storage";
 
 function Projects() {
   const [folders, setFolders] = useState<any>(null);
@@ -60,6 +61,9 @@ function Projects() {
         const user = auth.currentUser.uid;
         const userCollection = collection(database, "users");
         const userDocRef = doc(userCollection, user);
+        const storage = getStorage();
+        const storageRef = ref(storage, `users/${user}/${id}`);
+        await deleteObject(storageRef);
         await updateDoc(userDocRef, {
           projects: [...folders.filter((folder: any) => folder.id !== id)],
         })
