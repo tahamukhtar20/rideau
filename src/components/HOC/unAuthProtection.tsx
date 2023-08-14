@@ -16,9 +16,7 @@ const InverseAuthenticatedRoute = ({
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setLoggedIn(user);
-        setTimeout(() => {
-          router.push("/");
-        }, 1000);
+        router.push("/");
       } else {
         setLoggedIn(null);
       }
