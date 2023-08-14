@@ -23,14 +23,14 @@ export const mainContentBelow: IMainContentBelow = {
       text: "Êtes-vous prêt à donner à votre magasin une devanture qui attire l'attention et reflète",
       color: "secondary",
     },
-    { text: "l'essence", color: "white" },
+    { text: " l'essence ", color: "white" },
     {
       text: "de votre marque ? Nous sommes une entreprise innovante qui combine",
       color: "secondary",
     },
-    { text: "l'art", color: "white" },
+    { text: " l'art ", color: "white" },
     { text: "de la décoration avec la puissance de", color: "secondary" },
-    { text: "l'intelligence artificielle", color: "white" },
+    { text: " l'intelligence artificielle", color: "white" },
     { text: ".", color: "secondary" },
   ],
   description:

@@ -3,7 +3,7 @@ export const footerContent: IFooterContent = {
   title: "Des questions ? \nContactez-nous.",
   phone: {
     title: "Phone",
-    content: "123-456-7890",
+    content: "+33 7 67 12 80 30",
   },
   email: {
     title: "Email",
