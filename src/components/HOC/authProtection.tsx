@@ -14,7 +14,9 @@ const AuthenticatedRoute = ({ children }: { children: React.ReactNode }) => {
         setLoggedIn(user);
       } else {
         setLoggedIn(null);
-        router.push("/login");
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
       }
     });
 
