@@ -5,7 +5,7 @@ export async function GET() {
   return new Response(
     JSON.stringify(
       COUNTRY_CODES.sort((a: ICountryCode, b: ICountryCode) =>
-        a.name.localeCompare(b.name)
+        a.dial_code.slice(1) > b.dial_code.slice(1) ? 1 : -1
       )
     ),
     {
