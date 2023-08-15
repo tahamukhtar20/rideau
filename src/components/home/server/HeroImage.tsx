@@ -11,11 +11,8 @@ export const HeroImage: React.FC = () => {
         }}
       >
         <div className="">
-          <h1 className="lg:text-7xl md:text-6xl sm:text-5xl text-4xl pb-5 font-tertiary">
-            Lorem ipsum dolor sit
-          </h1>
-          <h2 className="md:text-3xl text-xl font-tertiary text-primary text-start pb-5">
-            Lorem ipsum dolor sit amet consectetur
+          <h2 className="xl:text-6xl lg:text-5xl md:text-4xl text-2xl font-tertiary text-primary text-start pb-5">
+            Créer votre devanture en 3 clics grâce a notre simulateur.
           </h2>
           <Link
             href={"/projects"}

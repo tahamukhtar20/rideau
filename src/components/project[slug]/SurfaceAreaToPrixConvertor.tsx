@@ -38,14 +38,14 @@ const SurfaceAreaToPrixConvertor = ({
     let convertedWidth = parseFloat(width);
 
     if (unit === "mm") {
-      convertedHeight = convertedHeight / 10; // Convert mm to cm
-      convertedWidth = convertedWidth / 10; // Convert mm to cm
+      convertedHeight = convertedHeight / 10;
+      convertedWidth = convertedWidth / 10;
     } else if (unit === "m") {
-      convertedHeight = convertedHeight * 100; // Convert m to cm
-      convertedWidth = convertedWidth * 100; // Convert m to cm
+      convertedHeight = convertedHeight * 100;
+      convertedWidth = convertedWidth * 100;
     }
 
-    const area = convertedHeight * convertedWidth;
+    const area = (convertedHeight * convertedWidth) / 10;
     setSurfaceArea(area.toString());
     const priceFactor = 1.5;
     const calculatedPrice = area * priceFactor;

@@ -3,7 +3,7 @@ export const mainContentAbove: IMainContentAbove = {
   title: "Faite parler de vous, pendant que vous dormez",
   content: [
     {
-      text: "Pionier dans le domaine de la décoration de devanture de magasin, nous sommes en mesure de créer des visuels captivants qui captureront l'imagination de vos clients. Mais ce n'est pas tout ! Nous repoussons les limites de la créativité en utilisant",
+      text: "Pionnier dans le domaine de la décoration de devanture de magasin, nous sommes en mesure de créer des visuels captivants qui captureront l'imagination de vos clients. Mais ce n'est pas tout ! Nous repoussons les limites de la créativité en utilisant",
       color: "primary-dark",
     },
     {
