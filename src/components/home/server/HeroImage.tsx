@@ -16,7 +16,7 @@ export const HeroImage: React.FC = () => {
           </h2>
           <Link
             href={"/projects"}
-            className="btn btn-primary bg-primary font-secondary sm:btn-md btn-sm sm:p-2 text-lg text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary"
+            className="btn btn-primary bg-primary font-secondary sm:btn-lg btn-md sm:p-2 text-lg text-white hover:bg-white hover:text-primary hover:border-primary rounded border-primary"
           >
             View Projects
           </Link>
