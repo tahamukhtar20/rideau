@@ -6,9 +6,7 @@ import { isConvex, matrix3d } from "./lib/geometry.ts";
 import type { Point, Quad } from "./lib/geometry.ts";
 import { photoInfo } from "./project.ts";
 import type { Project } from "./project.ts";
-import { ART_PX, shutterSize, slatPeriod } from "./render.ts";
-
-const CORNERS = ["top left", "top right", "bottom right", "bottom left"];
+import { artPixels, shutterSize, slatPeriod } from "./render.ts";
 
 type Props = {
   project: Project;
@@ -16,11 +14,13 @@ type Props = {
   showArt?: boolean;
   onQuad?: (q: Quad) => void;
   label: string;
+  /** Accessible names for the four corner handles, in quad order. */
+  cornerLabels?: string[];
   /** Small caption shown in the photo's corner. */
   tag?: string;
 };
 
-export function Stage({ project, editable = false, showArt = true, onQuad, label, tag }: Props) {
+export function Stage({ project, editable = false, showArt = true, onQuad, label, cornerLabels = [], tag }: Props) {
   const info = photoInfo(project.photo);
   const outer = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ w: 0, h: 0 });
@@ -41,16 +41,16 @@ export function Stage({ project, editable = false, showArt = true, onQuad, label
 
   const k = box.w / info.w || 0;
   const size = shutterSize(project);
-  const artH = Math.round((ART_PX * size.h) / size.w);
-  const svg = useMemo(() => artSvg(project.art, size.w, size.h, ART_PX), [project.art, size.w, size.h]);
+  const { w: artW, h: artH } = artPixels(size);
+  const svg = useMemo(() => artSvg(project.art, size.w, size.h, artW), [project.art, size.w, size.h, artW]);
   const shown = project.quad.map((p) => ({ x: p.x * k, y: p.y * k })) as Quad;
   let transform = "";
   try {
-    if (k > 0) transform = matrix3d(ART_PX, artH, shown);
+    if (k > 0) transform = matrix3d(artW, artH, shown);
   } catch {
     transform = "";
   }
-  const period = slatPeriod(ART_PX, size.w);
+  const period = slatPeriod(artW, size.w);
 
   // ---- dragging ----
   const drag = useRef<{ corner: number | "all"; start: Point; quad: Quad } | null>(null);
@@ -86,6 +86,7 @@ export function Stage({ project, editable = false, showArt = true, onQuad, label
   };
   const onUp = () => {
     drag.current = null;
+    setActive(null);
   };
   const onKey = (corner: number) => (e: KeyboardEvent) => {
     const step = (e.shiftKey ? 10 : 1) / (k || 1);
@@ -100,14 +101,17 @@ export function Stage({ project, editable = false, showArt = true, onQuad, label
 
   return (
     <div className="stage" ref={outer}>
-      <div className="stage-box" style={{ width: box.w, height: box.h }} role="img" aria-label={label}>
-        <img src={info.url} alt="" draggable={false} />
-        {showArt && transform && (
-          <div className="art" style={{ width: ART_PX, height: artH, transform }}>
-            <div className="art-svg" dangerouslySetInnerHTML={{ __html: svg }} />
-            <div className="slats" style={{ backgroundSize: `100% ${period}px` }} />
-          </div>
-        )}
+      <div className="stage-box" style={{ width: box.w, height: box.h }}>
+        {/* The picture is one image for assistive tech; the handles below stay separate controls. */}
+        <div className="picture" role="img" aria-label={label}>
+          <img src={info.url} alt="" draggable={false} />
+          {showArt && transform && (
+            <div className="art" style={{ width: artW, height: artH, transform }}>
+              <div className="art-svg" dangerouslySetInnerHTML={{ __html: svg }} />
+              <div className="slats" style={{ backgroundSize: `100% ${period}px` }} />
+            </div>
+          )}
+        </div>
         {tag && <span className="tag">{tag}</span>}
         {editable && k > 0 && (
           <>
@@ -120,12 +124,13 @@ export function Stage({ project, editable = false, showArt = true, onQuad, label
                 type="button"
                 className={`handle${active === i ? " on" : ""}`}
                 style={{ left: p.x, top: p.y }}
-                aria-label={`Corner ${CORNERS[i]}`}
+                aria-label={cornerLabels[i]}
                 onPointerDown={onDown(i)}
                 onPointerMove={onMove}
                 onPointerUp={onUp}
                 onPointerCancel={onUp}
                 onFocus={() => setActive(i)}
+                onBlur={() => setActive(null)}
                 onKeyDown={onKey(i)}
               />
             ))}

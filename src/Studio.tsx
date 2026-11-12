@@ -1,13 +1,14 @@
 // The studio: photo, fit, dress and quote steps around the live stage.
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { ArrowLeft, ArrowRight, Check, Download, Eye, EyeOff, RotateCcw, Save, Trash2, Upload } from "lucide-react";
-import { DESIGNS, PALETTES, designById, paletteById, thumbSvg } from "./lib/art.ts";
+import { DESIGNS, PALETTES, designById, thumbSvg } from "./lib/art.ts";
 import type { ArtSpec } from "./lib/art.ts";
 import { estimate, parseMetres } from "./lib/pricing.ts";
 import { SCENES, sceneById, svgUrl } from "./lib/scenes.ts";
 import { money, num, useLang } from "./i18n.ts";
 import type { Strings } from "./i18n.ts";
-import { deleteProject, fromScene, initialQuad, listProjects, readPhoto, saveProject } from "./project.ts";
+import { deleteProject, fromScene, initialQuad, listProjects, newId, photoInfo, readPhoto, saveProject } from "./project.ts";
 import type { Project, SavedProject } from "./project.ts";
 import { downloadMockup, renderMockup } from "./render.ts";
 import { Stage } from "./Stage.tsx";
@@ -15,6 +16,8 @@ import { Stage } from "./Stage.tsx";
 const STEPS = ["photo", "fit", "dress", "quote"] as const;
 type Step = (typeof STEPS)[number];
 const stepLabel = (t: Strings, s: Step) => ({ photo: t.stepPhoto, fit: t.stepFit, dress: t.stepDress, quote: t.stepQuote })[s];
+/** Names the app filled in itself (sample shops, "My shop" in either language), as opposed to typed ones. */
+const AUTO_NAMES = new Set([...SCENES.map((s) => s.name), "My shop", "Ma boutique"]);
 
 export function Studio({ sceneId }: { sceneId: string | null }) {
   const { lang, t } = useLang();
@@ -24,7 +27,8 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
   const [saved, setSaved] = useState<SavedProject[]>([]);
   const [notice, setNotice] = useState<string | null>(null);
   const [justSaved, setJustSaved] = useState(false);
-  const [busy, setBusy] = useState<"upload" | "export" | null>(null);
+  const [busy, setBusy] = useState<"upload" | "export" | "save" | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const refresh = () => listProjects().then(setSaved, () => setSaved([]));
@@ -47,15 +51,22 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
   const est = estimate(w, h);
   const design = designById(project.art.design);
   const stepIndex = STEPS.indexOf(step);
+  // Rebuilt only when the palette or text changes, not on every keystroke elsewhere.
+  const thumbs = useMemo(
+    () => Object.fromEntries(DESIGNS.map((d) => [d.id, thumbSvg(d.id, project.art.palette, project.art.text)])),
+    [project.art.palette, project.art.text],
+  );
+  const info = photoInfo(project.photo);
+  const photoRatio = info.w / info.h;
 
   const pickScene = (id: string) => {
     setProject((p) => {
       // Follow the shop's name in the lettering unless it was typed by hand.
-      const typed = p.art.text && !SCENES.some((s) => s.name === p.art.text);
-      // Likewise the project name, while it is still a sample shop's name.
-      const named = p.name.trim() && !SCENES.some((s) => s.name === p.name);
-      const next = fromScene(id, named ? p.name : sceneById(id)!.name, typed ? p.art : { ...p.art, text: "" });
-      return { ...next, id: p.id };
+      const typed = p.art.text && !AUTO_NAMES.has(p.art.text);
+      // Likewise the project name, while the app chose it.
+      const named = p.name.trim() && !AUTO_NAMES.has(p.name);
+      // A new photo is a new project, so saving never overwrites the one it came from.
+      return fromScene(id, named ? p.name : sceneById(id)!.name, typed ? p.art : { ...p.art, text: "" });
     });
     setShowArt(true);
     setStep("fit");
@@ -67,7 +78,9 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
       const photo = await readPhoto(file);
       setProject((p) => ({
         ...p,
-        name: SCENES.some((s) => s.name === p.name) ? t.untitled : p.name,
+        id: newId(),
+        name: AUTO_NAMES.has(p.name) ? t.untitled : p.name,
+        art: AUTO_NAMES.has(p.art.text) || !p.art.text ? { ...p.art, text: t.untitled } : p.art,
         photo,
         quad: initialQuad(photo),
         width: "3",
@@ -83,23 +96,27 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
     }
   };
   const save = async () => {
+    setBusy("save");
     try {
-      const thumb = (await renderMockup(project, 360)).toDataURL("image/jpeg", 0.8);
       const p = { ...project, name: project.name.trim() || t.untitled, updated: Date.now() };
+      const thumb = (await renderMockup(p, 360)).toDataURL("image/jpeg", 0.8);
       await saveProject({ ...p, thumb });
-      setProject(p);
+      // Only the fields saving changed: edits made meanwhile are kept.
+      setProject((cur) => (cur.id === p.id ? { ...cur, name: cur.name.trim() ? cur.name : p.name, updated: p.updated } : cur));
       setJustSaved(true);
       refresh();
-    } catch (e) {
-      setNotice((e as Error).message);
+    } catch {
+      setNotice(t.saveFailed);
+    } finally {
+      setBusy(null);
     }
   };
   const exportPng = async () => {
     setBusy("export");
     try {
       await downloadMockup(project);
-    } catch (e) {
-      setNotice((e as Error).message);
+    } catch {
+      setNotice(t.exportFailed);
     } finally {
       setBusy(null);
     }
@@ -137,9 +154,15 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
                 <button type="button" className="icon" aria-label={`${t.open} ${s.name}`} onClick={() => (setProject(s), setShowArt(true), setStep("dress"))}>
                   <ArrowRight size={16} />
                 </button>
-                <button type="button" className="icon" aria-label={`${t.remove} ${s.name}`} onClick={() => deleteProject(s.id).then(refresh)}>
-                  <Trash2 size={16} />
-                </button>
+                {pendingDelete === s.id ? (
+                  <button type="button" className="btn ghost confirm" onClick={() => deleteProject(s.id).then(refresh, () => setNotice(t.saveFailed)).finally(() => setPendingDelete(null))} onBlur={() => setPendingDelete(null)} autoFocus>
+                    {t.confirmDelete}
+                  </button>
+                ) : (
+                  <button type="button" className="icon" aria-label={`${t.remove} ${s.name}`} onClick={() => setPendingDelete(s.id)}>
+                    <Trash2 size={16} />
+                  </button>
+                )}
               </li>
             ))}
           </ul>
@@ -165,10 +188,10 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
               className={d.id === project.art.design ? "on" : ""}
               aria-pressed={d.id === project.art.design}
               onClick={() => setArt({ design: d.id })}
-              title={d.name}
+              title={t.designNames[d.id]}
             >
-              <span className="thumb" dangerouslySetInnerHTML={{ __html: thumbSvg(d.id, project.art.palette, project.art.text) }} />
-              <span className="name">{d.name}</span>
+              <span className="thumb" dangerouslySetInnerHTML={{ __html: thumbs[d.id] }} />
+              <span className="name">{t.designNames[d.id]}</span>
             </button>
           ))}
         </div>
@@ -177,7 +200,7 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
           {PALETTES.map((p) => (
             <button key={p.id} type="button" className={p.id === project.art.palette ? "on" : ""} aria-pressed={p.id === project.art.palette} onClick={() => setArt({ palette: p.id })}>
               <span className="sw">{p.colors.map((c) => <i key={c} style={{ background: c }} />)}</span>
-              {p.name}
+              {t.paletteNames[p.id]}
             </button>
           ))}
         </div>
@@ -208,7 +231,7 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
           <dd>{Number.isFinite(w) && Number.isFinite(h) ? `${num(w, lang)} × ${num(h, lang)} m` : "–"}</dd>
           <dt>{t.designs}</dt>
           <dd>
-            {design.name} · {paletteById(project.art.palette).name}
+            {t.designNames[design.id]} · {t.paletteNames[project.art.palette]}
           </dd>
         </dl>
         <button type="button" className="btn wide" onClick={exportPng} disabled={busy === "export"}>
@@ -235,25 +258,25 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
 
       <section className="center">
         <div className="bar">
-          <div className="seg" role="tablist">
+          <div className="seg" role="group" aria-label={t.stepsLabel}>
             {STEPS.map((s, i) => (
-              <button key={s} type="button" role="tab" aria-selected={s === step} className={s === step ? "on" : ""} onClick={() => setStep(s)}>
+              <button key={s} type="button" aria-current={s === step ? "step" : undefined} className={s === step ? "on" : ""} onClick={() => setStep(s)}>
                 <span className="n">{i + 1}</span>
                 {stepLabel(t, s)}
               </button>
             ))}
           </div>
           <div className="sp" />
-          <button type="button" className="btn ghost" onClick={() => setShowArt((v) => !v)} aria-pressed={!showArt}>
+          <button type="button" className="btn ghost" onClick={() => setShowArt((v) => !v)} aria-label={showArt ? t.showBefore : t.showAfter}>
             {showArt ? <EyeOff size={16} aria-hidden /> : <Eye size={16} aria-hidden />}
             <span className="hide-sm">{showArt ? t.showBefore : t.showAfter}</span>
           </button>
-          <button type="button" className="btn" onClick={exportPng} disabled={busy === "export"}>
+          <button type="button" className="btn" onClick={exportPng} disabled={busy === "export"} aria-label={t.export}>
             <Download size={16} aria-hidden />
             <span className="hide-sm">{busy === "export" ? t.exporting : t.export}</span>
           </button>
         </div>
-        <div className="view">
+        <div className="view" style={{ "--ratio": `${photoRatio}` } as CSSProperties}>
           <Stage
             project={project}
             editable={step === "fit"}
@@ -261,6 +284,7 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
             onQuad={(quad) => update({ quad })}
             label={`${project.name}, ${showArt ? t.after : t.before}`}
             tag={showArt ? t.after : t.before}
+            cornerLabels={t.corners}
           />
         </div>
       </section>
@@ -311,8 +335,8 @@ export function Studio({ sceneId }: { sceneId: string | null }) {
           <p className="note">{t.rateNote}</p>
         </div>
         <div className="sp" />
-        <button type="button" className="btn wide" onClick={save}>
-          {justSaved ? <Check size={16} aria-hidden /> : <Save size={16} aria-hidden />} {justSaved ? t.savedOk : t.save}
+        <button type="button" className="btn wide" onClick={save} disabled={busy === "save"}>
+          {justSaved ? <Check size={16} aria-hidden /> : <Save size={16} aria-hidden />} {busy === "save" ? t.saving : justSaved ? t.savedOk : t.save}
         </button>
       </aside>
       {notice && (

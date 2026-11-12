@@ -99,10 +99,13 @@ function db(): Promise<IDBDatabase> {
 async function tx<T>(mode: IDBTransactionMode, run: (s: IDBObjectStore) => IDBRequest<T>): Promise<T> {
   const d = await db();
   try {
+    // Resolve only once the transaction has committed, so a failed write is never reported as saved.
     return await new Promise<T>((resolve, reject) => {
-      const req = run(d.transaction(STORE, mode).objectStore(STORE));
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => reject(req.error);
+      const t = d.transaction(STORE, mode);
+      const req = run(t.objectStore(STORE));
+      t.oncomplete = () => resolve(req.result);
+      t.onerror = () => reject(t.error ?? req.error);
+      t.onabort = () => reject(t.error ?? new Error("transaction aborted"));
     });
   } finally {
     d.close();

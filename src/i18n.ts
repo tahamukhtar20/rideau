@@ -62,6 +62,15 @@ const en = {
   source: "Source code",
   designsTitle: "Designs",
   designsBody: "Nine designs in six palettes, drawn as SVG. The lettering design uses your shop's name.",
+  language: "Language",
+  corners: ["Top left corner", "Top right corner", "Bottom right corner", "Bottom left corner"],
+  saveFailed: "The project could not be saved in this browser.",
+  exportFailed: "The mockup could not be created.",
+  saving: "Saving…",
+  confirmDelete: "Delete?",
+  stepsLabel: "Steps",
+  designNames: { waves: "Waves", terrazzo: "Terrazzo", leaves: "Leaves", stripes: "Stripes", arcade: "Arcade", dots: "Dots", blocks: "Blocks", sunrise: "Sunrise", lettering: "Lettering" } as Record<string, string>,
+  paletteNames: { dusk: "Dusk", sage: "Sage", candy: "Candy", noir: "Noir", sea: "Sea", clay: "Clay" } as Record<string, string>,
 };
 
 const fr: typeof en = {
@@ -123,6 +132,15 @@ const fr: typeof en = {
   source: "Code source",
   designsTitle: "Décors",
   designsBody: "Neuf décors en six palettes, dessinés en SVG. Le décor lettrage reprend le nom de votre boutique.",
+  language: "Langue",
+  corners: ["Coin supérieur gauche", "Coin supérieur droit", "Coin inférieur droit", "Coin inférieur gauche"],
+  saveFailed: "Le projet n'a pas pu être enregistré dans ce navigateur.",
+  exportFailed: "La maquette n'a pas pu être créée.",
+  saving: "Enregistrement…",
+  confirmDelete: "Supprimer ?",
+  stepsLabel: "Étapes",
+  designNames: { waves: "Vagues", terrazzo: "Terrazzo", leaves: "Feuilles", stripes: "Rayures", arcade: "Arcades", dots: "Pois", blocks: "Formes", sunrise: "Soleil levant", lettering: "Lettrage" },
+  paletteNames: { dusk: "Crépuscule", sage: "Sauge", candy: "Bonbon", noir: "Noir", sea: "Mer", clay: "Argile" },
 };
 
 export type Strings = typeof en;

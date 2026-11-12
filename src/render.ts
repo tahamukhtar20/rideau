@@ -9,8 +9,14 @@ import type { Project } from "./project.ts";
 
 /** Roller-shutter slats are about 8 cm tall. */
 export const SLAT_CM = 8;
-/** Width of the artwork texture in pixels, before it is warped onto the shutter. */
+/** Longest side of the artwork texture in pixels, before it is warped onto the shutter. */
 export const ART_PX = 900;
+
+/** Texture size for a shutter: ART_PX on its long side, so very thin shutters stay small. */
+export function artPixels(size: { w: number; h: number }): { w: number; h: number } {
+  const k = ART_PX / Math.max(size.w, size.h);
+  return { w: Math.max(1, Math.round(size.w * k)), h: Math.max(1, Math.round(size.h * k)) };
+}
 
 /** Shutter size in metres, falling back to the outline's proportions when the typed size is unusable. */
 export function shutterSize(p: Project): { w: number; h: number } {
@@ -74,7 +80,7 @@ function warp(ctx: CanvasRenderingContext2D, src: CanvasImageSource, w: number, 
 }
 
 /** The mockup at `outW` pixels wide (never larger than the photo itself, except for drawn scenes). */
-export async function renderMockup(p: Project, outW = 1600, withArt = true): Promise<HTMLCanvasElement> {
+export async function renderMockup(p: Project, outW = 1600): Promise<HTMLCanvasElement> {
   const info = photoInfo(p.photo);
   const photo = await loadImage(info.url);
   const W = p.photo.kind === "image" ? Math.min(outW, info.w) : outW;
@@ -84,13 +90,13 @@ export async function renderMockup(p: Project, outW = 1600, withArt = true): Pro
   out.height = Math.round(info.h * k);
   const ctx = out.getContext("2d")!;
   ctx.drawImage(photo, 0, 0, out.width, out.height);
-  if (!withArt) return out;
 
   const size = shutterSize(p);
-  const art = await loadImage(svgUrl(artSvg(p.art, size.w, size.h, ART_PX)));
+  const px = artPixels(size);
+  const art = await loadImage(svgUrl(artSvg(p.art, size.w, size.h, px.w)));
   const tex = document.createElement("canvas");
-  tex.width = art.naturalWidth || ART_PX;
-  tex.height = art.naturalHeight || Math.round((ART_PX * size.h) / size.w);
+  tex.width = px.w;
+  tex.height = px.h;
   const tctx = tex.getContext("2d")!;
   tctx.drawImage(art, 0, 0, tex.width, tex.height);
   drawSlats(tctx, tex.width, tex.height, slatPeriod(tex.width, size.w));

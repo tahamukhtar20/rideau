@@ -48,7 +48,7 @@ export default function App() {
           {!inStudio && <a href="#how">{t.how}</a>}
         </nav>
         <div className="sp" />
-        <div className="lang" role="group" aria-label="Language">
+        <div className="lang" role="group" aria-label={t.language}>
           {(["en", "fr"] as const).map((l) => (
             <button key={l} type="button" className={l === lang ? "on" : ""} aria-pressed={l === lang} onClick={() => setLang(l)}>
               {l.toUpperCase()}

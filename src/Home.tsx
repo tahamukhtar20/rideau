@@ -66,7 +66,7 @@ export function Home({ go }: { go: (path: string) => void }) {
             <figure key={d.id}>
               <span dangerouslySetInnerHTML={{ __html: thumbSvg(d.id, PALETTES[i % PALETTES.length].id, "Lune") }} />
               <figcaption>
-                {d.name} <span>{PALETTES[i % PALETTES.length].name}</span>
+                {t.designNames[d.id]} <span>{t.paletteNames[PALETTES[i % PALETTES.length].id]}</span>
               </figcaption>
             </figure>
           ))}

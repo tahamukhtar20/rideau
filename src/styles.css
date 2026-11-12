@@ -158,6 +158,10 @@ a {
   touch-action: none;
 }
 /* No overflow clipping here, so corner handles at the photo's edge stay whole. */
+.picture {
+  position: absolute;
+  inset: 0;
+}
 .stage-box img {
   display: block;
   width: 100%;
@@ -536,6 +540,12 @@ a {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.saved .confirm {
+  padding: 5px 10px;
+  font-size: 13px;
+  color: var(--warn);
+  border-color: var(--warn);
+}
 .saved small {
   color: var(--mute);
   font-size: 12px;
@@ -768,7 +778,9 @@ a {
   }
   .view {
     flex: none;
-    aspect-ratio: 3 / 2;
+    /* The photo's own proportions, capped so a portrait photo stays on screen. */
+    aspect-ratio: var(--ratio, 1.5);
+    max-height: 70vh;
   }
   .side.left,
   .side.right {
